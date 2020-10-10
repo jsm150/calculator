@@ -133,7 +133,7 @@ namespace calculator
         {
             string o = ((Button)sender).Text;
             var s = math.Add(lbl_text.Text, o, ref lbl_state);
-            if (s != "") 
+            if (s != "")
                 lbl_text.Text = s;
         }
 

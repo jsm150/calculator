@@ -291,6 +291,7 @@
             this.lbl_state.Name = "lbl_state";
             this.lbl_state.Size = new System.Drawing.Size(298, 23);
             this.lbl_state.TabIndex = 21;
+            this.lbl_state.Text = "변경됨";
             this.lbl_state.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // Form1
