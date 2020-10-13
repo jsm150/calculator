@@ -67,6 +67,7 @@ namespace calculator
         }
         private void btn_num_Click(object sender, EventArgs e)
         {
+            btn_total.Focus();
             if (!math.Fir)
                 btn_clear_Click(sender, e);
             var num = ((Button)sender).Text;
@@ -100,6 +101,7 @@ namespace calculator
 
         private void btn_del_Click(object sender, EventArgs e)
         {
+            btn_total.Focus();
             var deci = false; string[] vs = new string[2];
             var cheak = (lbl_text.Text[0] == '-') ? true : false;
 
@@ -114,12 +116,14 @@ namespace calculator
 
         private void btn_clear_Click(object sender, EventArgs e)
         {
+            btn_total.Focus();
             lbl_text.Text = "0"; lbl_state.Text = "";
             math.AllClear(); math.Init = false;
         }
 
         private void btn_CE_Click(object sender, EventArgs e)
         {
+            btn_total.Focus();
             lbl_text.Text = "0"; math.Init = false;
         }
 
@@ -131,6 +135,7 @@ namespace calculator
 
         private void NumOperator(object sender, EventArgs e)
         {
+            btn_total.Focus();
             string o = ((Button)sender).Text;
             var s = math.Add(lbl_text.Text, o, ref lbl_state);
             if (s != "")
