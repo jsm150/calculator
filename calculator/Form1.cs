@@ -6,7 +6,7 @@ namespace calculator
 {
     public partial class Form1 : Form
     {
-        Math math = new Math();
+        calculate math = new calculate();
         public Form1()
         {
             InitializeComponent();
@@ -63,6 +63,9 @@ namespace calculator
                 case Keys.Decimal:
                     btn_num_Click(btn_dot, e);
                     break;
+                case Keys.C:
+                    btn_clear.PerformClick();
+                    break;
             }
         }
         private void btn_num_Click(object sender, EventArgs e)
@@ -78,24 +81,34 @@ namespace calculator
             math.IsDeci(ref deci, ref vs, temp);
 
             if (!(deci && num == "."))
+            {
                 if (deci)
                     vs[1] += num;
                 else if (num != ".")
                     vs[0] += num;
                 else
                     deci = true;
+            }
 
             if (math.Init)
             {
                 lbl_text.Text = num; math.Init = false; return;
             }
             else if (lbl_text.Text.Count() < 17)
+            {
                 if (lbl_text.Text == "0" && num != ".")
-                        lbl_text.Text = num;
+                {
+                    lbl_text.Text = num;
+                }
                 else
+                {
                     lbl_text.Text = string.Concat(vs[0].Reverse().Select((t, idx) => (idx % 3 == 0 && idx != 0) ? $"{t}," : $"{t}").Reverse());
+                }
+            }
             if (deci)
+            {
                 lbl_text.Text += "." + vs[1];
+            }
             lbl_text.Text = (cheak) ? "-" + lbl_text.Text : lbl_text.Text;
         }
 
