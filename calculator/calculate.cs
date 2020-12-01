@@ -4,87 +4,101 @@ using System.Windows.Forms;
 
 namespace calculator
 {
-    class calculate
+    internal class Calculate
     {
-        public bool Init { get; set; } = false;
+        private double? _lastNum;
+        private bool _lblSet;
+        private readonly Stack<char> _ope = new Stack<char>();
+        private double? _saveNum;
+        public bool Init { get; set; }
         public bool Fir { get; set; } = true;
-        bool lblSet = false;
-        double? saveNum = null;
-        double? lastNum = null;
-        Stack<char> ope = new Stack<char>();
+
         public string Add(string s, string o, ref Label label)
         {
             Fir = true;
-            lblSet = true;
+            _lblSet = true;
             var a = "";
             if (!Init)
                 a = Result(false, s, ref label);
 
-            ope.Push(o.First());
-            if (lblSet)
-                label.Text = label.Text.Substring(0, label.Text.Count() - 3) + $" {ope.Peek()} ";
-            else 
-                label.Text = (label.Text.EndsWith("= ")) ? label.Text : label.Text + lastNum + " " + ope.Peek().ToString() + " ";
+            _ope.Push(o.First());
+            if (_lblSet)
+                label.Text = $@"{label.Text.Substring(0, label.Text.Length - 3)} {_ope.Peek()} ";
+            else
+                label.Text = label.Text.EndsWith("= ") ? label.Text : label.Text + _lastNum + " " + _ope.Peek() + " ";
             return a;
         }
 
         public string Result(bool b, string s, ref Label label)
         {
-            bool deci = false; string[] vs = new string[2];
-            if (Fir) lastNum = double.Parse(string.Concat(s.Where(t => t != ',')));
+            var deci = false;
+            var vs = new string[2];
+            if (Fir) _lastNum = double.Parse(string.Concat(s.Where(t => t != ',')));
 
             if (b && !Fir)
-                label.Text = $"{saveNum} {ope.Peek()} {lastNum} =";
+                label.Text = $@"{_saveNum} {_ope.Peek()} {_lastNum} =";
             else if (b)
-                label.Text += lastNum + " = ";
+                label.Text += _lastNum + @" = ";
 
             if (b) Fir = false;
 
-            if (saveNum != null && ope.Count() != 0 && lastNum != null)
+            if (_saveNum != null && _ope.Count != 0 && _lastNum != null)
             {
-                char temp = ope.Peek();
+                var temp = _ope.Peek();
                 switch (temp)
                 {
                     case '+':
-                        saveNum += lastNum;
+                        _saveNum += _lastNum;
                         break;
                     case '-':
-                        saveNum -= lastNum;
+                        _saveNum -= _lastNum;
                         break;
                     case '*':
-                        saveNum *= lastNum;
+                        _saveNum *= _lastNum;
                         break;
                     case '/':
-                        saveNum /= lastNum;
+                        _saveNum /= _lastNum;
                         break;
                 }
             }
             else
-                saveNum = lastNum;
-            
-            Init = true; lblSet = false;
-            
-            IsDeci(ref deci, ref vs, saveNum.ToString());
+            {
+                _saveNum = _lastNum;
+            }
 
-            var a = string.Concat(vs[0].Reverse().Where(t => t != '-').Select((t, idx) => (idx % 3 == 0 && idx != 0) ? $"{t}," : $"{t}").Reverse());
+            Init = true;
+            _lblSet = false;
+
+            IsDeci(ref deci, ref vs, _saveNum.ToString());
+
+            var a = string.Concat(vs[0].Reverse().Where(t => t != '-')
+                .Select((t, idx) => idx % 3 == 0 && idx != 0 ? $"{t}," : $"{t}").Reverse());
             if (deci)
                 a += "." + vs[1];
-            if (saveNum < 0) a = "-" + a;
+            if (_saveNum < 0) a = "-" + a;
             return a;
         }
+
         public void AllClear()
         {
-            saveNum = null; ope.Clear(); lastNum = null; Fir = true; Init = false;
+            _saveNum = null;
+            _ope.Clear();
+            _lastNum = null;
+            Fir = true;
+            Init = false;
         }
 
         public void IsDeci(ref bool deci, ref string[] vs, string s)
         {
             if (s.Contains('.'))
             {
-                deci = true; vs = s.Split('.');
+                deci = true;
+                vs = s.Split('.');
             }
             else
+            {
                 vs[0] = s;
+            }
         }
     }
 }
